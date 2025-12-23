@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:6.0
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=leads_db
+
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/code  # Volume para Hot Reload funcionar
+    depends_on:
+      - mongodb
+    environment:
+      - MONGO_URL=mongodb://mongodb:27017
+      - DATABASE_NAME=leads_db
+
+volumes:
+  mongo_data:
