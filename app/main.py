@@ -27,7 +27,7 @@ app = FastAPI(title="Leads API", version="1.0.0", lifespan=lifespan)
 
 @app.get("/")
 async def health_check():
-    return {"status": "ok", "message": "API ok..."}
+    return {"status": "ok", "message": "NEW MSG YEAH (testing github actions)..."}
 
 @app.get('/pinga')
 async def ping():
