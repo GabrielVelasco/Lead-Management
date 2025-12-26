@@ -1,19 +1,11 @@
-import logging
-import sys
+from app.utils.logger import get_logger
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException
 from pymongo.errors import ConnectionFailure
 from app.core.database import db
 
 # logging to stdout for Azure
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.StreamHandler(sys.stdout)
-    ]
-)
-logger = logging.getLogger("uvicorn")
+logger = get_logger(__name__)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
