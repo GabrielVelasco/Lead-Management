@@ -5,26 +5,22 @@ logger = get_logger(__name__)
 
 class ExternalLeadsService:
     """
-    Serviço responsável apenas pela comunicação com APIs de terceiros.
-    Isola a complexidade de HTTP, Timeouts e Parsing.
+    Servico para se comunicar com API externa (isola HTTP calls, parsing, erros, etc).
     """
     
     BASE_URL = "https://dummyjson.com/users/1"
 
     @staticmethod
     async def get_birth_date_from_external_source() -> str | None:
-        """
-        Busca a data de nascimento na API externa.
-        
+        """       
         Regra de Negócio:
         - Em caso de sucesso: Retorna a string da data.
-        - Em caso de qualquer erro (Timeout, 404, 500): Retorna None (Graceful Degradation).
-          O erro é logado para debug, mas não quebra o fluxo do usuário.
+        - Em caso de qualquer erro (Timeout, 404, 500): Retrona None.
+          O erro é logado para debug, mas não quebra o fluxo do usuário, que eh registrado (nao perde possivel cliente).
         """
         async with httpx.AsyncClient() as client:
             try:
-                # Timeout de 5 segundos é uma boa prática. 
-                # APIs externas podem travar e não queremos prender nossa thread.
+                # 5s de timeout... APIs externas podem travar... para nao prender a thread.
                 response = await client.get(ExternalLeadsService.BASE_URL, timeout=5.0)
                 
                 # Levanta exceção se o status não for 2xx

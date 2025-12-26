@@ -2,7 +2,7 @@ import logging
 import sys
 
 def get_logger(name: str) -> logging.Logger:
-    """Retorna um logger configurado para o módulo."""
+    """Retorna logger configurado para funcionar no Azure..."""
 
     logger = logging.getLogger(name)
     if not logger.handlers:

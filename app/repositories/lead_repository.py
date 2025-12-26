@@ -4,7 +4,7 @@ from app.models.lead_model import LEAD_COLLECTION_NAME
 
 class LeadRepository:
     """
-    Layer que acessa (salva, recupera...) MongoDB, unica responsabilidade... Nao sabe de mais nada, a n ser BD.
+    Conversa com MongoDB, sobre colecao Leads, unica responsabilidade... Nao sabe de mais nada.
     """
     
     @property

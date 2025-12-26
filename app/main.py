@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException
 from pymongo.errors import ConnectionFailure
 from app.core.database import db
+from app.api.v1.endpoints import leads
 
 # logging to stdout for Azure
 logger = get_logger(__name__)
@@ -25,6 +26,8 @@ async def lifespan(app: FastAPI):
     logger.info("Database connection closed.")
 
 app = FastAPI(title="Leads API", version="1.0.0", lifespan=lifespan)
+
+app.router.include_router(leads.router, prefix="/leads", tags=["leads"])
 
 @app.get("/")
 async def health_check():
