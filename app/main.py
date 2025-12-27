@@ -2,6 +2,7 @@ from app.utils.logger import get_logger
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from pymongo.errors import ConnectionFailure
 from app.core.database import db
 from app.api.v1.endpoints import leads
@@ -28,16 +29,22 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="Leads API", version="1.0.0", lifespan=lifespan)
 
-# Add CORS middleware - MUST be before route includes
+# Add TrustedHost middleware first (if needed for Azure)
+app.add_middleware(
+    TrustedHostMiddleware,
+    allowed_hosts=["*"]
+)
+
+# Add CORS middleware - MUST be before route includes and after TrustedHost
 # This configuration allows requests from any origin
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # Allow all origins
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],  # Explicit HTTP methods
+    allow_methods=["*"],  # Allow all HTTP methods including OPTIONS
     allow_headers=["*"],  # Allow all headers
-    expose_headers=["*"],  # Expose all headers to client
-    max_age=3600,  # Cache preflight requests for 1 hour
+    expose_headers=["*"],  # Expose all response headers to client
+    max_age=86400,  # Cache preflight for 24 hours
 )
 
 app.router.include_router(leads.router, prefix="/leads", tags=["leads"])
