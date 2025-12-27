@@ -1,6 +1,7 @@
 from app.utils.logger import get_logger
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pymongo.errors import ConnectionFailure
 from app.core.database import db
 from app.api.v1.endpoints import leads
@@ -26,6 +27,15 @@ async def lifespan(app: FastAPI):
     logger.info("Database connection closed.")
 
 app = FastAPI(title="Leads API", version="1.0.0", lifespan=lifespan)
+
+# Add CORS middleware to bypass CORS restrictions
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all HTTP methods
+    allow_headers=["*"],  # Allow all headers
+)
 
 app.router.include_router(leads.router, prefix="/leads", tags=["leads"])
 
