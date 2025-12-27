@@ -6,7 +6,7 @@ from app.services.lead_service import LeadService
 
 router = APIRouter()
 
-# injecao dependencia... facilita testes unitarios depois
+# injecao FastAPI Dependency... facilita testes depois
 def get_lead_service():
     return LeadService()
 
