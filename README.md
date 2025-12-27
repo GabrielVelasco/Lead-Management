@@ -11,7 +11,7 @@ O foco principal foi garantir **resiliência**, **organização de código** e *
 
 O projeto já está hospedado e funcional. Você pode testar os endpoints ou visualizar o frontend nos links:
 
-* **API (Swagger UI):** [https://sua-api-no-azure.azurewebsites.net/docs](https://sua-api-no-azure.azurewebsites.net/docs)
+* **API (Swagger UI):** [https://leads-mng-fadxajdpe2hfajg3.brazilsouth-01.azurewebsites.net/docs](https://leads-mng-fadxajdpe2hfajg3.brazilsouth-01.azurewebsites.net/docs)
 * **Frontend (ReactJS):** [link_place_holder](link_place_holder)
 
 ---
@@ -77,7 +77,7 @@ A ideia aqui não foi criar complexidade desnecessária, mas sim deixar o códig
 
 ## 🛡 Integração Externa e Tolerância a Falhas
 
-O desafio pedia uma integração com a API `dummyjson` para buscar a data de nascimento, com uma pegadinha sobre como lidar com falhas.
+O desafio pedia uma integração com a API `dummyjson` para buscar a data de nascimento, com uma possível pegadinha sobre como lidar com falhas.
 
 **Minha abordagem: Graceful Degradation.**
 
@@ -90,13 +90,44 @@ A lógica implementada no `ExternalLeadsService` é:
 
 Dessa forma, garantimos a conversão do lead e deixamos a correção do dado para um processo posterior (ou update manual), sem impactar a experiência do usuário.
 
+## Matriz Responsabilidades
+
+| Component | Responsabilidade | Tech |
+|-----------|-----------------|------------|
+| **main.py** | Inicializacao instancia FastAPI, lifespan, routes setup | FastAPI, Uvicorn |
+| **leads.py (Routes)** | HTTP endpoint, dependency injection | FastAPI Router |
+| **lead_service.py** | Logica do negocio e dados API externa | Python |
+| **lead_repository.py** | CRUD na collection Leads no MongoDB | Motor (Async MongoDB) |
+| **lead_schema.py** | Validacao contratos Request/response | Pydantic v2 |
+| **lead_model.py** | Constante guarda nome da Leads collection no DB | Python |
+| **database.py** | Instancia MongoDB | Motor AsyncIOMotorClient |
+| **config.py** | Carrega env vars de forma segura | Pydantic-Settings |
+| **external_api.py** | Comunicacao API externa | httpx (async) |
+| **logger.py** | Logger estruturado para stout Azure | Python logging |
+
 ## 📂 Estrutura de Pastas
 
 ```text
 app/
-├── api/            # Rotas e Endpoints
-├── core/           # Configurações (Env vars, Conexão DB)
-├── models/         # Definições da Coleção
-├── repositories/   # Acesso direto ao Banco (CRUD)
-├── schemas/        # Pydantic (Validação e Serialização)
-└── services/       # Regra de Negócio e Integrações Externas
+├── core/
+│   ├── config.py          # Variáveis de ambiente (Pydantic Settings)
+│   └── database.py        # Conexão com Mongo (Motor - Async)
+│   
+├── models/
+│   └── lead_model.py      # Como o dado é salvo no Mongo
+├── schemas/
+│   └── lead_schema.py     # Pydantic (Input/Output validação)
+├── repositories/
+│   └── lead_repository.py # CRUD puro no Mongo
+├── services/
+│   ├── lead_service.py    # Lógica (Chama Repo + API Externa)
+│   └── external_api.py    # Cliente HTTP para dummyjson
+├── api/
+│   └── v1/
+│       └── endpoints/
+│           └── leads.py   # Rotas (GET, POST)
+└── main.py                # Entrada da aplicação
+Dockerfile
+docker-compose.yml
+requirements.txt
+README.md
