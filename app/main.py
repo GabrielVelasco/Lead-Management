@@ -28,13 +28,16 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="Leads API", version="1.0.0", lifespan=lifespan)
 
-# Add CORS middleware to bypass CORS restrictions
+# Add CORS middleware - MUST be before route includes
+# This configuration allows requests from any origin
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # Allow all origins
     allow_credentials=True,
-    allow_methods=["*"],  # Allow all HTTP methods
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],  # Explicit HTTP methods
     allow_headers=["*"],  # Allow all headers
+    expose_headers=["*"],  # Expose all headers to client
+    max_age=3600,  # Cache preflight requests for 1 hour
 )
 
 app.router.include_router(leads.router, prefix="/leads", tags=["leads"])
