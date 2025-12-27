@@ -64,6 +64,18 @@ O FastAPI gera automaticamente uma documentação interativa (Swagger UI).
         ```
 3.  Utilize `GET /leads` e `GET /leads/{id}` para consultar os dados salvos.
 
+## Testes
+
+Execute os testes localmente usando pytest (env vars aqui sao obrigatorias por causa do Pydantic):
+
+```bash
+MONGO_URL=qqlrcoisa DATABASE_NAME=qqlrcoisa pytest -v
+```
+
+Execute este comando a partir do diretório raiz do projeto. Os testes são isolados usando mocks para validar a camada de API sem exigir uma conexão com o banco de dados.
+
+**Integração CI/CD**: Os testes são executados automaticamente como parte do pipeline do GitHub Actions a cada push na branch `main`. Se os testes falharem, a implantação no Azure Web App é bloqueada, garantindo qualidade e confiabilidade do código.
+
 ## 🏗 Arquitetura e Decisões Técnicas
 
 Para este desafio, optei por fugir do padrão "MVC básico" ou de colocar toda a lógica nas rotas. Adotei uma **Clean Architecture Simplificada**, dividindo o projeto em camadas de responsabilidade única.
