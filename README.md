@@ -12,7 +12,7 @@ O foco principal foi garantir **resiliência**, **organização de código** e *
 O projeto já está hospedado e funcional. Você pode testar os endpoints ou visualizar o frontend nos links:
 
 * **API (Swagger UI):** [https://leads-mng-fadxajdpe2hfajg3.brazilsouth-01.azurewebsites.net/docs](https://leads-mng-fadxajdpe2hfajg3.brazilsouth-01.azurewebsites.net/docs)
-* **Frontend (ReactJS):** [link_place_holder](link_place_holder)
+* **Frontend (ReactJS):** [https://gabrielvelasco.github.io/Leads-front/](https://gabrielvelasco.github.io/Leads-front/)
 
 ---
 
