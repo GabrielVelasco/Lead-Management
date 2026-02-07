@@ -1,4 +1,4 @@
-# Blips Leads API
+# Leads API
 
 ![Architecture Diagram](./architecture.png)
 
